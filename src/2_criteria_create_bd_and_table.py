@@ -38,7 +38,7 @@ class CreateDBandTables:
             with conn.cursor() as cursor:
                 cursor.execute("""CREATE TABLE If NOT EXISTS companies(
                                id SERIAL PRIMARY KEY,
-                               company_id VARCHAR UNIQUE,
+                               employer_id VARCHAR UNIQUE,
                                name VARCHAR NOT NULL,
                                url VARCHAR);
                                """
@@ -49,19 +49,26 @@ class CreateDBandTables:
             print(f"Ошибка при создании таблицы: {e}")
 
     @staticmethod
-    def create_tables_vacancies(data_connect: dict, db_name: str) -> None:
+    def create_vacancies_table(data_connect: dict, db_name: str) -> None:
         """
         Создание таблицы вакансий выбранных компаний
         """
         data_connect['database'] = db_name
         conn = psycopg2.connect(**data_connect)
-        with conn.cursor() as cursor:
-            cursor.execute("""CREATE TABLE If NOT EXISTS vacancies(
-                                   id SERIAL PRIMARY KEY,
-                                   name VARCHAR NOT NULL,
-                                   salary POSITIVE INTEGER
-                                   description TEXT,
-                                   url VARCHAR NOT NULL);
-                                   """
-                           )
-        conn.commit()
+        try:
+            with conn.cursor() as cursor:
+                cursor.execute("""CREATE TABLE If NOT EXISTS vacancies(
+                                       id SERIAL PRIMARY KEY,
+                                       name VARCHAR NOT NULL,
+                                       salary POSITIVE INTEGER,
+                                       description TEXT,
+                                       employer_id VARCHAR NOT NULL,
+                                       CONSTRAINT fk_employer_id FOREIGN KEY(employer_id)
+                                       REFERENCES employers(employer_id) ON DELETE CASCADE,
+                                       url VARCHAR NOT NULL);
+                                       """
+                               )
+            conn.commit()
+
+        except psycopg2.Error as e:
+            print(f"Ошибка при создании таблицы: {e}")
