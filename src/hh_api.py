@@ -11,6 +11,9 @@ class HeadHunterAPI:
     def base_url(self):
         return self.__base_url
 
+
+class Employer(HeadHunterAPI):
+
     def employer_search(self, search: str) -> list:
         """Метод получения работодателей по переданному слову"""
         response = requests.get(f"{self.base_url}employers?text={search}&page=0&per_page=100")
@@ -41,3 +44,24 @@ class HeadHunterAPI:
         else:
             print("Ошибка при получении информации о работодателе")
             return None
+
+
+class Vacancy(HeadHunterAPI):
+    """
+    Класс для работы с API HeadHunter.
+    """
+
+    def connection(self, employer_id: int) -> None | list:
+        """
+        Метод, который подключается к апи hh.ru и получает вакансии по айди работодателя в формате json словарей
+        """
+        url = f"{self.base_url}vacancies?employer_id={employer_id}"
+
+        response = requests.get(url)
+
+        if response.status_code == 200:
+            return response.json()["items"]
+
+        else:
+            print(f"Запрос не был успешным. Возможная причина: {response.reason}")
+            return []

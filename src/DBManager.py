@@ -20,10 +20,10 @@ class DBManager:
         try:
             with self.connection.cursor() as curr:
                 curr.execute(
-                    """
-                    SELECT e.name, COUNT(v.id) AS vacancy_count FROM employers e
+                    """SELECT e.name, COUNT(v.id) AS vacancy_count 
+                    FROM employers e
                     LEFT JOIN vacancies v USING(employer_id)
-                    GROUP BY e.name; 
+                    GROUP BY e.name;
                     """
                 )
                 data_ = curr.fetchall()
@@ -40,9 +40,9 @@ class DBManager:
         try:
             with self.connection.cursor() as curr:
                 curr.execute(
-                    """
-                    SELECT e.name AS company_name, v.name AS vacancy_name, v.salary, v.url  FROM employers e
-                    LEFT JOIN vacancies v USING(employer_id);
+                    """SELECT v.name AS vacancy_name, e.name AS company_name, v.salary, v.url 
+                    FROM vacancies v
+                    LEFT JOIN employers e USING(employer_id);
                     """
                 )
                 data_ = curr.fetchall()
@@ -88,7 +88,7 @@ class DBManager:
             print(f'Произошла ошибка: {e}, при получении данных')
             return []
 
-    def get_vacancies_with_keyword(self, search: str) -> None | List:
+    def get_vacancies_with_search(self, search: str) -> None | List:
         """Получает список всех вакансий, в названии которых содержатся переданные в метод слова, например python."""
         try:
             with self.connection.cursor() as curr:
@@ -106,13 +106,3 @@ class DBManager:
         except psycopg2.Error as e:
             print(f'Произошла ошибка: {e}, при получении данных')
             return []
-
-        # with psycopg2.connect(host='localhost', database='coursework_5', user='postgres', password='123') as conn:
-        #     with conn.cursor() as cur:
-        #         # execute query
-        #         cur.execute("INSERT INTO tut VALUES(%s, %s)", (1, 'hAPPY'))
-        #         cur.execute("SELECT * FROM tut")
-        #
-        #         rows = cur.fetchall()
-        #         for row in rows:
-        #             print(row)
