@@ -61,7 +61,7 @@ def main():
         print(vacancies_list)
         CreateDBandTables.insert_data_vacancies(data_connect, db_name, vacancies_list)
 
-        db_option = DBManager("localhost", db_name, "postgres", "123")
+        db_option = DBManager(DATABASE_HOST, db_name, DATABASE_USER, DATABASE_PASSWORD)
 
         while True:
             print(
