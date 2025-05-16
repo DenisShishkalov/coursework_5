@@ -29,9 +29,8 @@ class CreateDBandTables:
                         name VARCHAR NOT NULL,
                         url VARCHAR,
                         open_vacancies INTEGER
-                    );
-                """
-                )
+                        );
+                        """)
                 conn.commit()
 
         except psycopg2.Error as e:
@@ -47,7 +46,7 @@ class CreateDBandTables:
         try:
             with conn.cursor() as cursor:
                 cursor.execute("""
-                                CREATE TABLE IF NOT EXISTS vacancies (
+                                    CREATE TABLE IF NOT EXISTS vacancies (
                                     id SERIAL PRIMARY KEY,
                                     name VARCHAR NOT NULL,
                                     description TEXT,
@@ -58,8 +57,7 @@ class CreateDBandTables:
                                     REFERENCES employers(employer_id) ON DELETE CASCADE,
                                     url VARCHAR NOT NULL
                     );
-                """
-                )
+                """)
 
             conn.commit()
 
@@ -82,8 +80,7 @@ class CreateDBandTables:
                         curr.execute(
                             """
                             INSERT INTO vacancies (name, salary, employer_id, url) 
-                            VALUES(%s, %s, %s, %s)"""
-                        ,
+                            VALUES(%s, %s, %s, %s)""",
                             (
                                 v["name"],
                                 salary,

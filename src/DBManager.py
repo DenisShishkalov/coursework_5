@@ -19,13 +19,11 @@ class DBManager:
         """Получает список всех компаний и количество вакансий у каждой компании."""
         try:
             with self.connection.cursor() as curr:
-                curr.execute(
-                    """SELECT e.name, COUNT(v.id) AS vacancy_count 
-                    FROM employers e
-                    LEFT JOIN vacancies v USING(employer_id)
-                    GROUP BY e.name;
-                    """
-                )
+                curr.execute("""SELECT e.name, COUNT(v.id) AS vacancy_count 
+                                FROM employers e
+                                LEFT JOIN vacancies v USING(employer_id)
+                                GROUP BY e.name;
+                                """)
                 data_ = curr.fetchall()
                 if data_:
                     return data_
@@ -96,8 +94,8 @@ class DBManager:
                     """SELECT * FROM vacancies
                     WHERE name LIKE %s;
                     """,
-                        (f"%{search}%",),
-                    )
+                    (f"%{search}%",),
+                )
 
                 data_ = curr.fetchall()
                 if data_:
